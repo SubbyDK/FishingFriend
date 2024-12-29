@@ -1,0 +1,15 @@
+## Interface: 30401
+## Version: 0.0.r1
+## Title: FishingFriend |cd0ff7d0aBy Subby|r (Ver. 0.0.r1)
+## Notes: Your friend there always will help you fish. (/lh)
+## Author: Subby of Golemagg [Horde]
+##
+## Dependencies: 
+##
+## SavedVariables: SUCCESSFUL_THROWS, REQUIRED_FISHING_SKILL, FISHING_LOOT
+## SavedVariablesPerCharacter:
+##
+## X-Category: Fishing
+
+FishingFriend.lua
+
