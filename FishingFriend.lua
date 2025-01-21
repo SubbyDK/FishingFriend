@@ -30,11 +30,11 @@
 -- =                                  Set some locals for this addon                                  =
 -- ====================================================================================================
 
-local AddonName = ...
+local AddonName = "FishingFriend"
 local PRINT_COLOR = "|cFFFFA500"
 local DEBUG_PRINT_COLOR = "|cFFFF0000"
 local FF_Debug = false
-local LocalizedFishingName = GetSpellInfo(7620) or "Fishing"
+local LocalizedFishingName = "Fishing"--GetSpellInfo(7620) or "Fishing"
 local lastClickTime = nil
 local FakeGrey = false
 local FoundGUID = nil
@@ -73,13 +73,13 @@ end
 -- =                          Check that it's the right version of the addon                          =
 -- ====================================================================================================
 
-if (select(4, GetBuildInfo()) < 30000) or (select(4, GetBuildInfo()) > 40000) then
-    C_Timer.After(40, function()
-        PRINT_TEXT("Your running the The Wrath of the Lich King version of " .. AddonName .. ".");
-        PRINT_TEXT("Please download the right version, if there is one.");
-    end)
+--if (select(4, GetBuildInfo()) < 30000) or (select(4, GetBuildInfo()) > 40000) then
+    --C_Timer.After(40, function()
+        --PRINT_TEXT("Your running the The Wrath of the Lich King version of " .. AddonName .. ".");
+        --PRINT_TEXT("Please download the right version, if there is one.");
+    --end)
     --return
-end
+--end
 
 -- ====================================================================================================
 -- =          A small localization function, will be mover to seperate file if it get to big          =
@@ -193,7 +193,7 @@ local f = CreateFrame("Frame", nil, UIParent);
 local f1 = CreateFrame("Frame", nil, UIParent); -- For the list with fish stats
 -- 
 f1:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 40, -40);
-f1:SetSize(200, ((tonumber(FishingStatisticsLines) * 18) + 32));
+-- f1:SetSize(200, ((tonumber(FishingStatisticsLines) * 18) + 32));
 -- Make the 2 tables we need to make the statistic lines.
 f1.FonstringsLeft = {}
 f1.FonstringsRight = {}
