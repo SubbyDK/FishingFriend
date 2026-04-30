@@ -428,17 +428,6 @@ SlashCmdList["FISHINGFRIEND"] = function(msg)
     if msg == "debug" then
         FF_SETTINGS.debug = not FF_SETTINGS.debug
         print("FishingFriend Debug: "..(FF_SETTINGS.debug and "|cff00ff00ON|r" or "|cffff0000OFF|r"))
-    elseif msg == "stats" then
-        print("|cFFFFA500--- Fishing Stats ---|r")
-        for zone, items in pairs(FF_STATS) do
-            print("|cFFFFFF00Zone: " .. zone .. "|r")
-            for id, data in pairs(items) do 
-                print("  " .. id .. ": " .. (data.name or "Unknown") .. " x" .. data.count) 
-            end
-        end
-    elseif msg == "reset" then
-        wasFishing, clickedBobber = false, false
-        print("FishingFriend: State reset.")
     else
         -- If UI file is loaded, this will toggle the config window
         if FF_Config then
