@@ -80,7 +80,7 @@ English, German, French, Spanish, Russian, Chinese, Korean, Italian, and Portugu
 ---
 
 ### ⚠️ Caution
-This version is specifically made for **Project Ascension - Bronzebeard**.  
+This version is specifically made for **Project Ascension - Bronzebeard** and only tested there.  
 For various reasons, they have changed the IDs for many items, which can affect the "Open!" button functionality.  
 If it is not working as intended, please disable the button in the menu.  
 All other features should work as expected.
