@@ -1,5 +1,5 @@
 ## Interface: 30300
-## Version: 0.0.1
+## Version: 0.0.2
 ## Title: FishingFriend |cd0ff7d0aBy Subby|r
 ## Notes: Because staring at a bobber for 17 hours is hard enough. (/ff)
 ## Author: Subby
