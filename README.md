@@ -4,6 +4,7 @@
   <img src="https://img.shields.io/badge/Interface-3.3.5a-blue.svg" alt="Interface">
   <img src="https://img.shields.io/badge/Version-0.0.1-green.svg" alt="Version">
   <img src="https://img.shields.io/badge/Author-Subby-orange.svg" alt="Author">
+  <img src="https://img.shields.io/github/downloads/SubbyDK/FishingFriend/total" alt="Downloads">
 </p>
 
 **FishingFriend** is a lightweight, all-in-one utility for World of Warcraft (3.3.5a) designed to make fishing less of a chore and more of a reward.
