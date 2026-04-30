@@ -5,18 +5,19 @@ local L = ns.L
 -- SECTION 1: Item List Configuration
 -- All IDs and names must match the server database exactly (case-sensitive)
 -----------------------------------------------------------------------
+
 local OPEN_ITEMS = {
     -- Clams
     [5523]   = "Small Barnacled Clam",
     [7973]   = "Big-mouth Clam",
     [15874]  = "Soft-Shelled Clam",
     -- Trunks
-    --[21228]  = "Mithril Bound Trunk", -- Maybe remove, as opening it takes more bag space than keeping it closed.
-    --[13882]  = "Iron Bound Trunk", -- Maybe remove, as opening it takes more bag space than keeping it closed.
-    --[13886]  = "Watertight Trunk", -- Maybe remove, as opening it takes more bag space than keeping it closed.
+    [21228]  = "Mithril Bound Trunk",
+    [21150]  = "Iron Bound Trunk",
+    [21113]  = "Watertight Trunk",
     -- Other
+    [6647] = "Bloated Catfish",
     [100625] = "Bloated Flat Fish",
-    [4497]   = "Heavy Brown Bag",
 }
 
 -----------------------------------------------------------------------
