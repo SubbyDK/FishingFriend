@@ -1,6 +1,8 @@
 local addonName, ns = ...
 local L = ns.L
 
+local realmName = nil
+
 -----------------------------------------------------------------------
 -- SECTION 1: Item List Configuration
 -- All IDs and names must match the server database exactly (case-sensitive)
@@ -154,7 +156,13 @@ local eventFrame = CreateFrame("Frame")
 eventFrame:RegisterEvent("BAG_UPDATE")
 eventFrame:RegisterEvent("CHAT_MSG_LOOT")
 eventFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
-eventFrame:SetScript("OnEvent", function() UpdateLootButton() end)
+eventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
+eventFrame:SetScript("OnEvent", function(self, event, ...)
+    UpdateLootButton()
+    if (event == "PLAYER_ENTERING_WORLD") then
+        realmName = GetRealmName()
+    end
+end)
 
 -- Export function for use in other parts of the addon
 ns.UpdateLootButton = UpdateLootButton

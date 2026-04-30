@@ -129,13 +129,26 @@ local function UpdateEverything()
         local _, _, _, _, _, _, itemSubType = GetItemInfo(itemID)
         if itemSubType then
             local s = itemSubType:lower()
-            if s:find("fishing") or s:find("fisk") or (L and L["Fishing Pole"] and s == L["Fishing Pole"]:lower()) then isPole = true end
+            if (s:find("fishing poles")) then
+                isPole = true
+            end
         end
     end
 
-    if isPole and FF_SETTINGS.showTracker and not InCombatLockdown() then Tracker:Show(); RefreshTracker() else Tracker:Hide() end
-    if isPole and FF_SETTINGS.perfectSound then AdjustSounds(true) else AdjustSounds(false) end
-    if ns.UpdateLootButton then ns.UpdateLootButton() end
+    if (isPole) and (FF_SETTINGS.showTracker) and (not InCombatLockdown()) then
+        Tracker:Show();
+        RefreshTracker()
+    else
+        Tracker:Hide()
+    end
+    if (isPole) and (FF_SETTINGS.perfectSound) then
+        AdjustSounds(true)
+    else
+        AdjustSounds(false)
+    end
+    if (ns.UpdateLootButton) then
+        ns.UpdateLootButton()
+    end
 end
 
 -- ====================================================================

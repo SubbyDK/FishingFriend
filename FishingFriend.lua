@@ -57,11 +57,15 @@ end
 -- DATABASE & SETTINGS INITIALIZATION
 -- ====================================================================
 -- Checks if SavedVariables exist in the .toc file, otherwise creates them.
-if (not REQUIRED_FISHING_SKILL) or (type(REQUIRED_FISHING_SKILL) ~= "table") then REQUIRED_FISHING_SKILL = {} end
-if (not FF_STATS) or (type(FF_STATS) ~= "table") then FF_STATS = {} end
+if (not REQUIRED_FISHING_SKILL) or (type(REQUIRED_FISHING_SKILL) ~= "table") then
+    REQUIRED_FISHING_SKILL = {}
+end
+if (not FF_STATS) or (type(FF_STATS) ~= "table") then
+    FF_STATS = {}
+end
 if (not FF_SETTINGS) or (type(FF_SETTINGS) ~= "table") then
     -- autoLure: brug lures, playSounds: lyd ved fangst, showTracker: vis/skjul trackeren
-    FF_SETTINGS = { autoLure = true, playSounds = true, showChat = true, debug = false, showTracker = true }
+    FF_SETTINGS = { autoLure = true, playSounds = true, showChat = true, debug = false, showTracker = true, autoOpen = 1, perfectSound = 1, }
 end
 
 -- File path to the custom alert sound played when quest/special items are looted.
@@ -271,7 +275,7 @@ end
 -- STATE VARIABLES
 -- ====================================================================
 -- Tracks player equipment and fishing status to prevent errors during loot.
-local hasPole, wasFishing, clickedBobber = false, false, false
+local wasFishing, clickedBobber = false, false
 local lastClickTime = 0
 
 -- ====================================================================
@@ -382,12 +386,25 @@ f:SetScript("OnEvent", function(self, event, ...)
         end
         wasFishing, clickedBobber = false, false
 
-    -- Updates the "hasPole" status whenever gear changes.
-    elseif event == "UNIT_INVENTORY_CHANGED" or event == "PLAYER_ENTERING_WORLD" then
-        local itemLink = GetInventoryItemLink("player", 16)
-        hasPole = (itemLink ~= nil and itemLink:find(L["Fishing Pole"]))
     end
 end)
+
+-- ====================================================================
+-- CHECK IF IT'S A FISHING POLE WE HAVE ON
+-- ====================================================================
+local function IsItFishingPole()
+    local itemID = GetInventoryItemID("player", 16)
+    if (itemID) then
+        local _, _, _, _, _, _, itemSubType = GetItemInfo(itemID)
+        if (itemSubType) then
+            local s = itemSubType:lower()
+            if (s:find("fishing poles")) then
+                return true
+            end
+        end
+    end
+    return false
+end
 
 -- ====================================================================
 -- CLICK ENGINE (RIGHT-CLICK TO CAST)
@@ -396,7 +413,9 @@ end)
 local btn = CreateFrame("Button", "EasyFishingButton", UIParent, "SecureActionButtonTemplate")
 WorldFrame:HookScript("OnMouseDown", function(_, button)
     -- Only proceed if Right-Clicking, holding a pole, and not in combat.
-    if button ~= "RightButton" or not hasPole or InCombatLockdown() then return end
+    if (button ~= "RightButton") or (InCombatLockdown()) or (not IsItFishingPole()) then
+        return
+    end
     
     -- If the mouse is already over the bobber, don't cast; let the player loot.
     if GameTooltip:IsVisible() and _G["GameTooltipTextLeft1"]:GetText() == L["Fishing Bobber"] then
