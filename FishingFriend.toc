@@ -1,15 +1,16 @@
-## Interface: 30401
-## Version: 0.0.r1
-## Title: FishingFriend |cd0ff7d0aBy Subby|r (Ver. 0.0.r1)
-## Notes: Your friend there always will help you fish. (/lh)
-## Author: Subby of Golemagg [Horde]
+## Interface: 30300
+## Version: 0.0.1
+## Title: FishingFriend |cd0ff7d0aBy Subby|r
+## Notes: Because staring at a bobber for 17 hours is hard enough. (/ff)
+## Author: Subby
 ##
 ## Dependencies: 
 ##
-## SavedVariables: SUCCESSFUL_THROWS, REQUIRED_FISHING_SKILL, FISHING_LOOT
-## SavedVariablesPerCharacter:
+## SavedVariables: FF_STATS, REQUIRED_FISHING_SKILL
+## SavedVariablesPerCharacter: FF_SETTINGS
 ##
 ## X-Category: Fishing
 
 FishingFriend.lua
-
+FishingFriendUI.lua
+FishingFriendOpen.lua
