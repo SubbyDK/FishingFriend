@@ -67,11 +67,13 @@ WTF/
 └── Account/
     └── {ACCOUNT_NAME}/
         ├── SavedVariables/
-        │   └── FishingFriend.lua
+        │   ├── FishingFriend.lua
+        │   └──FishingFriend.lua.bak
         └── {SERVER_NAME}/
             └── {CHARACTER_NAME}/
                 └── SavedVariables/
-                    └── FishingFriend.lua
+                    ├── FishingFriend.lua
+                    └──FishingFriend.lua.bak
 ```
 ---
 
