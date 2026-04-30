@@ -2,7 +2,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/Interface-3.3.5a-blue.svg" alt="Interface">
-  <img src="https://img.shields.io/badge/Version-0.0.2-green.svg" alt="Version">
+  <img src="https://img.shields.io/badge/Version-0.0.3-green.svg" alt="Version">
   <img src="https://img.shields.io/badge/Author-Subby-orange.svg" alt="Author">
   <img src="https://img.shields.io/github/downloads/SubbyDK/FishingFriend/total" alt="Downloads">
 </p>
@@ -42,20 +42,21 @@ However, I was never satisfied with how it handled lures, it often failed to app
 ### 📦 Installation
 
 1. Download the repository.
-2. Copy the `FishingFriend` folder into your `Interface\AddOns` directory.
-3. Ensure the structure looks like this:
+2. Rename the folder `FishingFriend-master` to `FishingFriend`.
+3. Move the `FishingFriend` folder into your `Interface\AddOns` directory.
+4. Ensure the structure looks like this:
 ```
 Interface/
 └── AddOns/
     └── FishingFriend/
         ├── Sounds/
         │   └── GoodFishing.ogg
-        ├── FishingFriend.toc
         ├── FishingFriend.lua
-        ├── FishingFriendUI.lua
-        └── FishingFriendOpen.lua
+        ├── FishingFriend.toc
+        ├── FishingFriendOpen.lua
+        └── FishingFriendUI.lua
 ```
-4. Restart World of Warcraft.
+5. Restart World of Warcraft.
 
 ### 🗑️ Uninstallation
 
@@ -66,11 +67,13 @@ WTF/
 └── Account/
     └── {ACCOUNT_NAME}/
         ├── SavedVariables/
-        │   └── FishingFriend.lua
+        │   ├── FishingFriend.lua
+        │   └──FishingFriend.lua.bak
         └── {SERVER_NAME}/
             └── {CHARACTER_NAME}/
                 └── SavedVariables/
-                    └── FishingFriend.lua
+                    ├── FishingFriend.lua
+                    └──FishingFriend.lua.bak
 ```
 ---
 
@@ -81,10 +84,9 @@ English, German, French, Spanish, Russian, Chinese, Korean, Italian, and Portugu
 ---
 
 ### ⚠️ Caution
-This version is specifically made for **Project Ascension - Bronzebeard** and only tested there.  
-For various reasons, they have changed the IDs for many items, which can affect the "Open!" button functionality.  
-If it is not working as intended, please disable the button in the menu.  
-All other features should work as expected.
+This version has only been tested on **Project Ascension - Bronzebeard**.  
+For various reasons, private servers sometimes change the Item IDs, if you experience any issues or incorrect item detections, please let me know.  
+The addon should work as intended provided that the Item IDs have not been modified on your server.
 
 ---
 
