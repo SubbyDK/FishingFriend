@@ -8,6 +8,7 @@
 </p>
 
 **FishingFriend** is a lightweight, all-in-one utility for World of Warcraft (3.3.5a) designed to make fishing less of a chore and more of a reward.
+Download neweste version [here](https://github.com/SubbyDK/FishingFriend/releases/latest/download/FishingFriend.zip).
 
 ---
 
