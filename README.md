@@ -7,7 +7,7 @@
   <img src="https://img.shields.io/github/downloads/SubbyDK/FishingFriend/total" alt="Downloads">
 </p>
 
-**FishingFriend** is a lightweight, all-in-one utility for World of Warcraft (3.3.5a) designed to make fishing less of a chore and more of a reward.
+**[FishingFriend](https://github.com/SubbyDK/FishingFriend/releases/latest/download/FishingFriend.zip)** is a lightweight, all-in-one utility for World of Warcraft (3.3.5a) designed to make fishing less of a chore and more of a reward.
 Download neweste version [here](https://github.com/SubbyDK/FishingFriend/releases/latest/download/FishingFriend.zip).
 
 ---
@@ -15,7 +15,7 @@ Download neweste version [here](https://github.com/SubbyDK/FishingFriend/release
 ### 💡 The Background
 The motivation behind this addon comes from my love for [FishingBuddy](https://legacy-wow.com/wotlk-addons/fishing-buddy/).  
 However, I was never satisfied with how it handled lures, it often failed to apply them correctly because zone requirements were inaccurate in the original addon.  
-**FishingFriend** fixes this by "learning" from every sub-zone, ensuring your lures are used correctly based on real-time data.
+**[FishingFriend](https://github.com/SubbyDK/FishingFriend/releases/latest/download/FishingFriend.zip)** fixes this by "learning" from every sub-zone, ensuring your lures are used correctly based on real-time data.
 
 ---
 
