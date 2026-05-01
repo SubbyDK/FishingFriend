@@ -13,7 +13,7 @@ Download neweste version [here](https://github.com/SubbyDK/FishingFriend/release
 ---
 
 ### 💡 The Background
-The motivation behind this addon comes from my love for [FishingBuddy](https://legacy-wow.com/wotlk-addons/fishing-buddy/).  
+The motivation behind this addon comes from my love for FishingBuddy.  
 However, I was never satisfied with how it handled lures, it often failed to apply them correctly because zone requirements were inaccurate in the original addon.  
 **[FishingFriend](https://github.com/SubbyDK/FishingFriend/releases/latest/download/FishingFriend.zip)** fixes this by "learning" from every sub-zone, ensuring your lures are used correctly based on real-time data.
 
