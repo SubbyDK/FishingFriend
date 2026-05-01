@@ -41,7 +41,7 @@ However, I was never satisfied with how it handled lures, it often failed to app
 
 ### 📦 Installation
 
-1. Download the repository.
+1. [Download](https://github.com/SubbyDK/FishingFriend/releases/latest/download/FishingFriend.zip) the repository.
 2. Rename the folder `FishingFriend-master` to `FishingFriend`.
 3. Move the `FishingFriend` folder into your `Interface\AddOns` directory.
 4. Ensure the structure looks like this:
