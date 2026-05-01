@@ -74,7 +74,7 @@ SlashCmdList["FFFIND"] = function(msg)
     if not msg or msg == "" then print("Usage: /fffind Item Name"); return end
     print("|cff00ff00Searching for exact match: '" .. msg .. "'...|r")
     local found = false
-    for i = 1, 150000 do
+    for i = 1, 2000000 do
         local name = GetItemInfo(i)
         if name and name == msg then
             print("|cff00ff00Found!|r ID for |cffffff00" .. name .. "|r is: |cff00ffff" .. i .. "|r")

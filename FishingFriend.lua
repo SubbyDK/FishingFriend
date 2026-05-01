@@ -79,13 +79,13 @@ local SKILL_BREAKPOINTS = {0, 25, 75, 150, 225, 300, 375, 400, 425, 450, 475, 49
 -- ====================================================================
 -- List of lures available in the game, sorted by their skill bonus.
 local LURES = {
-    { name = "Shiny Bauble", bonus = 25, id = 6529 },
-    { name = "Nightcrawlers", bonus = 50, id = 6530 },
-    { name = "Bright Baubles", bonus = 75, id = 6532 },
-    { name = "Aquadynamic Fish Lens", bonus = 50, id = 34861 },
-    { name = "Flesh Eating Worm", bonus = 75, id = 34861 },
-    { name = "Aquadynamic Fish Attractor", bonus = 100, id = 6533 },
-    { name = "Glow-worm", bonus = 100, id = 43334 }
+    { name = "Shiny Bauble", bonus = 25, minSkill = 1, id = 6529 },
+    { name = "Nightcrawlers", bonus = 50, minSkill = 50, id = 6530 },
+    { name = "Bright Baubles", bonus = 75, minSkill = 100, id = 6532 },
+    { name = "Aquadynamic Fish Lens", bonus = 50, minSkill = 100, id = 34861 },
+    { name = "Flesh Eating Worm", bonus = 75, minSkill = 100, id = 34861 },
+    { name = "Aquadynamic Fish Attractor", bonus = 100, minSkill = 100, id = 6533 },
+    { name = "Glow-worm", bonus = 100, minSkill = 100, id = 43334 }
 }
 
 -- List of "fake" junk items (Dalaran coins, etc.) that shouldn't trigger skill-up requirements.
@@ -219,6 +219,15 @@ function ns.GetCurrentTotalSkill()
     return 0
 end
 
+-- Shared function: Gets the player's BASE fishing skill.
+function ns.GetBaseFishingSkill()
+    for i = 1, GetNumSkillLines() do
+        local name, _, _, rank = GetSkillLineInfo(i)
+        if name == L["Fishing"] then return rank end
+    end
+    return 0
+end
+
 -- Shared function: Helper to determine if an item should be shown separately in the UI
 function ns.IsItemSpecial(itemID)
     -- If it's a Quest item, Special item, or one of the "Fake Greys" (Coins), keep it separate.
@@ -240,35 +249,6 @@ end
 local function GetNextBreakpoint(currentSkill)
     for _, b in ipairs(SKILL_BREAKPOINTS) do if b > currentSkill then return b end end
     return currentSkill + 25 -- Fallback if skill exceeds the table.
-end
-
--- ====================================================================
--- LURE LOGIC
--- ====================================================================
--- Automatically applies a lure if the current skill is lower than the recorded zone requirement.
-local function ApplyLure()
-    if InCombatLockdown() or not FF_SETTINGS.autoLure then return end
-    
-    -- Checks if the fishing pole already has an active temporary enchantment (lure).
-    local hasMainHandEnchant = GetWeaponEnchantInfo()
-    if hasMainHandEnchant then return end
-
-    local zone = GetZoneText() .. " - " .. GetMinimapZoneText()
-    local currentSkill = ns.GetCurrentTotalSkill()
-    local required = REQUIRED_FISHING_SKILL[zone] or 0
-
-    -- If total skill is below zone requirements, search inventory for the best lure.
-    if currentSkill < required then
-        DebugLog(string.format("Skill too low for %s (%d/%d). Searching for lure...", zone, currentSkill, required), "ff8000")
-        for _, lure in ipairs(LURES) do
-            if GetItemCount(lure.id) > 0 then
-                DebugLog("Applying Lure ID: " .. lure.id, "00ff00")
-                -- UseItemByName works with Item IDs in 3.3.5 when passed as a string.
-                UseItemByName(tostring(lure.id)) 
-                return 
-            end
-        end
-    end
 end
 
 -- ====================================================================
@@ -315,7 +295,6 @@ f:SetScript("OnEvent", function(self, event, ...)
             if subevent == "SPELL_AURA_APPLIED" then
                 wasFishing, clickedBobber = true, false
                 DebugLog("Started fishing", "00ff00")
-                ApplyLure()
             elseif subevent == "SPELL_AURA_REMOVED" then
                 if not clickedBobber then
                     wasFishing, clickedBobber = false, false
@@ -426,8 +405,55 @@ WorldFrame:HookScript("OnMouseDown", function(_, button)
     -- Double-click detection: Casts fishing if two right-clicks occur within 0.4 seconds.
     local currentTime = GetTime()
     if (currentTime - lastClickTime) < 0.4 then
-        btn:SetAttribute("type", "spell")
-        btn:SetAttribute("spell", L["Fishing"])
+        -- LURE LOGIC INTEGRATED HERE TO PREVENT SECURE CALL BLOCKS
+        local hasMainHandEnchant = GetWeaponEnchantInfo()
+        local lureToUse = nil
+
+        if FF_SETTINGS.autoLure and not hasMainHandEnchant then
+            local zone = GetZoneText() .. " - " .. GetMinimapZoneText()
+            local totalSkill = ns.GetCurrentTotalSkill()
+            local baseSkill = ns.GetBaseFishingSkill() 
+            local required = REQUIRED_FISHING_SKILL[zone] or 0
+
+            if totalSkill < required then
+                -- Sort lures by bonus to find the smallest effective one first
+                table.sort(LURES, function(a, b) return a.bonus < b.bonus end)
+                
+                for _, lure in ipairs(LURES) do
+                    if GetItemCount(lure.id) > 0 and baseSkill >= lure.minSkill then
+                        -- Pick the first (smallest) lure that meets the zone requirement
+                        if (totalSkill + lure.bonus) >= required then
+                            lureToUse = lure.id
+                            break
+                        end
+                    end
+                end
+                
+                -- Fallback: If no small lure is enough, use the best one available
+                if not lureToUse then
+                    local bestBonus = -1
+                    for _, lure in ipairs(LURES) do
+                        if GetItemCount(lure.id) > 0 and baseSkill >= lure.minSkill then
+                            if lure.bonus > bestBonus then
+                                bestBonus = lure.bonus
+                                lureToUse = lure.id
+                            end
+                        end
+                    end
+                end
+            end
+        end
+
+        -- If a lure is needed and found, set button to use item; otherwise cast spell
+        if lureToUse then
+            btn:SetAttribute("type", "item")
+            btn:SetAttribute("item", "item:"..lureToUse)
+            DebugLog("Lure required. Applying optimal lure ID: " .. lureToUse, "00ff00")
+        else
+            btn:SetAttribute("type", "spell")
+            btn:SetAttribute("spell", L["Fishing"])
+        end
+
         SetOverrideBindingClick(btn, true, "BUTTON2", "EasyFishingButton")
         lastClickTime = 0
     else
