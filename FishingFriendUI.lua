@@ -214,14 +214,14 @@ StaticPopupDialogs["FF_CONFIRM_CLEAR_ALL"] = {
     text = "Clear ALL data? (Resets stats and sound profile)", 
     button1 = "Yes", button2 = "No", 
     OnAccept = function() 
-        FF_STATS = {}; FF_SETTINGS.originalSounds = {}; FF_SETTINGS.isSoundAdjusted = false
+        FF_STATS = {}; FF_SETTINGS.originalSounds = {}; FF_SETTINGS.isSoundAdjusted = false; FF_SETTINGS.lastTrackingIndex = nil
         RefreshTracker(); if ns.UpdateLootButton then ns.UpdateLootButton() end
     end, timeout = 0, whileDead = true, hideOnEscape = true 
 }
 
 -- CONFIG FRAME SETUP
 local Config = CreateFrame("Frame", "FF_Config", UIParent)
-Config:SetSize(280, 360) 
+Config:SetSize(280, 385) 
 Config:SetPoint("CENTER")
 Config:SetBackdrop({ bgFile="Interface\\DialogFrame\\UI-DialogBox-Background", edgeFile="Interface\\DialogFrame\\UI-DialogBox-Border", tile=true, tileSize=32, edgeSize=32, insets={left=8,right=8,top=8,bottom=8} })
 Config:Hide(); Config:EnableMouse(true); Config:SetMovable(true); Config:RegisterForDrag("LeftButton"); 
@@ -253,13 +253,14 @@ CreateCheckButton("showTracker", "Show Fishing Tracker", -65)
 CreateCheckButton("autoLure", "Auto Use Lures", -90)
 CreateCheckButton("playSounds", "Play Rare Catch Sounds", -115)
 CreateCheckButton("showChat", "Show Chat Messages", -140)
-CreateCheckButton("autoOpen", "Show Loot Button for Clams", -165)
+CreateCheckButton("autoOpen", "Loot Button: Clams etc.", -165)
 CreateCheckButton("perfectSound", "Enhance Fishing Sounds", -190)
-CreateCheckButton("debug", "Debug Mode", -215)
+CreateCheckButton("autoTrack", "Auto Track 'Find Fish'", -215)
+CreateCheckButton("debug", "Debug Mode", -240)
 
 -- Data Management Buttons
 local b1 = CreateFrame("Button", nil, Config, "UIPanelButtonTemplate"); 
-b1:SetSize(180, 22); b1:SetPoint("TOP", 0, -250); b1:SetText("Clear Current Zone")
+b1:SetSize(180, 22); b1:SetPoint("TOP", 0, -275); b1:SetText("Clear Current Zone")
 b1:SetScript("OnClick", function() StaticPopup_Show("FF_CONFIRM_CLEAR_ZONE") end)
 
 local b2 = CreateFrame("Button", nil, Config, "UIPanelButtonTemplate"); 

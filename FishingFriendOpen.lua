@@ -10,16 +10,17 @@ local realmName = nil
 
 local OPEN_ITEMS = {
     -- Clams
-    [5523]   = "Small Barnacled Clam",
-    [7973]   = "Big-mouth Clam",
-    [15874]  = "Soft-Shelled Clam",
+    [5523]      = "Small Barnacled Clam",
+    [7973]      = "Big-mouth Clam",
+    [5524]      = "Thick-shelled Clam",
+    [15874]     = "Soft-shelled Clam",
     -- Trunks
-    [21228]  = "Mithril Bound Trunk",
-    [21150]  = "Iron Bound Trunk",
-    [21113]  = "Watertight Trunk",
+    [21228]     = "Mithril Bound Trunk",
+    [21150]     = "Iron Bound Trunk",
+    [21113]     = "Watertight Trunk",
     -- Other
-    [6647] = "Bloated Catfish",
-    [100625] = "Bloated Flat Fish",
+    [6647]      = "Bloated Catfish",
+    [100625]    = "Bloated Flat Fish",
 }
 
 -----------------------------------------------------------------------
