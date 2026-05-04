@@ -81,7 +81,10 @@ WTF/
 ### 🌍 Localization
 The addon automatically detects your client language and supports localization for:  
 **English**, German, French, Spanish, Russian, Chinese, Korean, Italian, and Portuguese.  
-For obvious reasons, I can't test all languages, so only languages in **bold** are confirmed.
+
+For obvious reasons, I can't test all languages.  
+Only languages in **bold** are confirmed.  
+Please let me know if you have tested any of the others.
 
 ---
 
