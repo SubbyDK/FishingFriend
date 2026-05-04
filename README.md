@@ -2,7 +2,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/Interface-3.3.5a-blue.svg" alt="Interface">
-  <img src="https://img.shields.io/badge/Version-0.0.4-green.svg" alt="Version">
+  <img src="https://img.shields.io/badge/Version-0.0.5-green.svg" alt="Version">
   <img src="https://img.shields.io/badge/Author-Subby-orange.svg" alt="Author">
   <img src="https://img.shields.io/github/downloads/SubbyDK/FishingFriend/total" alt="Downloads">
 </p>
@@ -85,7 +85,7 @@ English, German, French, Spanish, Russian, Chinese, Korean, Italian, and Portugu
 ---
 
 ### ⚠️ Caution
-This version has only been tested on **Project Ascension - Bronzebeard**.  
+This version has only been tested on **Project Ascension - Bronzebeard** and **Project-Epoch**.  
 For various reasons, private servers sometimes change the Item IDs, if you experience any issues or incorrect item detections, please let me know.  
 The addon should work as intended provided that the Item IDs have not been modified on your server.
 
