@@ -20,6 +20,7 @@ local OPEN_ITEMS = {
     [21113]     = "Watertight Trunk",
     -- Other
     [6647]      = "Bloated Catfish",
+    [8366]      = "Bloated Trout",
     [100625]    = "Bloated Flat Fish",
 }
 
