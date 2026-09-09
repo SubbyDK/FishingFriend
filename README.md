@@ -1,13 +1,13 @@
 # FishingFriend
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Interface-3.3.5a-blue.svg" alt="Interface">
-  <img src="https://img.shields.io/badge/Version-0.0.5-green.svg" alt="Version">
+  <img src="https://img.shields.io/badge/Interface-20504-blue.svg" alt="Interface">
+  <img src="https://img.shields.io/badge/Version-0.0.6-green.svg" alt="Version">
   <img src="https://img.shields.io/badge/Author-Subby-orange.svg" alt="Author">
   <img src="https://img.shields.io/github/downloads/SubbyDK/FishingFriend/total" alt="Downloads">
 </p>
 
-**[FishingFriend](https://github.com/SubbyDK/FishingFriend/releases/latest/download/FishingFriend.zip)** is a lightweight, all-in-one utility for World of Warcraft (3.3.5a) designed to make fishing less of a chore and more of a reward.  
+**[FishingFriend](https://github.com/SubbyDK/FishingFriend/releases/latest/download/FishingFriend.zip)** is a lightweight, all-in-one utility for World of Warcraft designed to make fishing less of a chore and more of a reward.  
 Download neweste version [here](https://github.com/SubbyDK/FishingFriend/releases/latest/download/FishingFriend.zip).
 
 ---
@@ -97,9 +97,7 @@ Please let me know if you have tested any of the others.
 ---
 
 ### ⚠️ Caution
-This version has only been tested on **Project Ascension - Bronzebeard** and **Project-Epoch**.  
-For various reasons, private servers sometimes change the Item IDs, if you experience any issues or incorrect item detections, please let me know.  
-The addon should work as intended provided that the Item IDs have not been modified on your server.
+If you experience any issues or incorrect item detections, please let me know.
 
 ---
 

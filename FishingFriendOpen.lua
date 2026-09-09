@@ -4,6 +4,47 @@ local L = ns.L
 local realmName = nil
 
 -----------------------------------------------------------------------
+-- API COMPATIBILITY HELPERS (C_Container vs Global)
+-----------------------------------------------------------------------
+local function GetContainerNumSlots(bag)
+    if C_Container and C_Container.GetContainerNumSlots then
+        return C_Container.GetContainerNumSlots(bag)
+    elseif _G.GetContainerNumSlots then
+        return _G.GetContainerNumSlots(bag)
+    end
+    return 0
+end
+
+local function GetContainerItemLink(bag, slot)
+    if C_Container and C_Container.GetContainerItemLink then
+        return C_Container.GetContainerItemLink(bag, slot)
+    elseif _G.GetContainerItemLink then
+        return _G.GetContainerItemLink(bag, slot)
+    end
+    return nil
+end
+
+local function GetContainerItemInfoHelper(bag, slot)
+    if C_Container and C_Container.GetContainerItemInfo then
+        local info = C_Container.GetContainerItemInfo(bag, slot)
+        if info then
+            return info.iconFileID, info.stackCount, info.isLocked, info.quality, info.isReadable, info.hasLoot, info.hyperlink, info.isFiltered, info.hasNoValue, info.itemID
+        end
+    elseif _G.GetContainerItemInfo then
+        return _G.GetContainerItemInfo(bag, slot)
+    end
+    return nil
+end
+
+local function UseContainerItemHelper(bag, slot)
+    if C_Container and C_Container.UseContainerItem then
+        C_Container.UseContainerItem(bag, slot)
+    elseif _G.UseContainerItem then
+        _G.UseContainerItem(bag, slot)
+    end
+end
+
+-----------------------------------------------------------------------
 -- SECTION 1: Item List Configuration
 -- All IDs and names must match the server database exactly (case-sensitive)
 -----------------------------------------------------------------------
@@ -11,17 +52,22 @@ local realmName = nil
 local OPEN_ITEMS = {
     -- Clams
     [5523]      = "Small Barnacled Clam",
-    [7973]      = "Big-mouth Clam",
     [5524]      = "Thick-shelled Clam",
+    [7973]      = "Big-mouth Clam",
     [15874]     = "Soft-shelled Clam",
     -- Trunks
-    [21228]     = "Mithril Bound Trunk",
-    [21150]     = "Iron Bound Trunk",
+    [20708]     = "Tightly Sealed Trunk",
     [21113]     = "Watertight Trunk",
+    [21150]     = "Iron Bound Trunk",
+    [21228]     = "Mithril Bound Trunk",
+    [27481]     = "Heavy Supply Crate",
+    [27513]     = "Curious Crate",
+    [34863]     = "Bag of Fishing Treasures", -- From Daile Quest: [Felblood Fillet] and [Bait Bandits] and [The One That Got Away] and [Shrimpin' Ain't Easy]
+    [35348]     = "Bag of Fishing Treasures", -- From Daile Quest: [Crocolisks in the City]
     -- Other
     [6647]      = "Bloated Catfish",
     [8366]      = "Bloated Trout",
-    [100625]    = "Bloated Flat Fish",
+    [27511]     = "Inscribed Scrollcase",
 }
 
 -----------------------------------------------------------------------
@@ -93,7 +139,7 @@ end
 
 -- Retrieves the ItemID from a specific bag slot
 local function GetItemID(bag, slot)
-    local _, _, _, _, _, _, _, _, _, itemID = GetContainerItemInfo(bag, slot)
+    local _, _, _, _, _, _, _, _, _, itemID = GetContainerItemInfoHelper(bag, slot)
     if not itemID then
         local link = GetContainerItemLink(bag, slot)
         if link then itemID = tonumber(link:match("item:(%d+)")) end
@@ -105,10 +151,11 @@ end
 -- SECTION 4: UI Component (The Loot Button)
 -----------------------------------------------------------------------
 
-local LootBtn = CreateFrame("Button", "FF_LootButton", UIParent, "SecureActionButtonTemplate, ActionButtonTemplate")
+-- Vi bruger en helt almindelig Button i stedet for SecureActionButtonTemplate,
+-- da vi direkte kan køre UseContainerItem i OnClick, når spilleren ikke er i kamp.
+local LootBtn = CreateFrame("Button", "FF_LootButton", UIParent, "ActionButtonTemplate")
 LootBtn:SetSize(45, 45)
 LootBtn:SetPoint("CENTER", UIParent, "CENTER", 0, -150)
-LootBtn:SetAttribute("type", "item")
 LootBtn:SetMovable(true)
 LootBtn:EnableMouse(true)
 LootBtn:RegisterForDrag("LeftButton")
@@ -119,6 +166,18 @@ LootBtn.icon = _G[LootBtn:GetName().."Icon"]
 LootBtn.text = LootBtn:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
 LootBtn.text:SetPoint("BOTTOM", LootBtn, "TOP", 0, 5)
 LootBtn.text:SetText("Open!")
+
+-- Gemmer aktuelle bag og slot direkte på knappen til OnClick
+LootBtn.targetBag = nil
+LootBtn.targetSlot = nil
+
+LootBtn:SetScript("OnClick", function(self, button)
+    if button == "LeftButton" and not InCombatLockdown() then
+        if self.targetBag and self.targetSlot then
+            UseContainerItemHelper(self.targetBag, self.targetSlot)
+        end
+    end
+end)
 
 -- Interaction: Move button with Shift + Left Click
 LootBtn:SetScript("OnDragStart", function(self) if IsShiftKeyDown() then self:StartMoving() end end)
@@ -140,10 +199,13 @@ local function UpdateLootButton()
         local slots = GetContainerNumSlots(bag)
         for slot = 1, (slots or 0) do
             local id = GetItemID(bag, slot)
-            -- If ID is in our list, show the button
+            -- If ID is in our list, bind bag/slot directly to the button script
             if id and OPEN_ITEMS[id] then 
-                local icon = GetContainerItemInfo(bag, slot)
-                LootBtn:SetAttribute("item", "item:"..id)
+                local icon = GetContainerItemInfoHelper(bag, slot)
+                
+                LootBtn.targetBag = bag
+                LootBtn.targetSlot = slot
+                
                 LootBtn.icon:SetTexture(icon)
                 LootBtn:Show()
                 return 

@@ -6,7 +6,15 @@ local L = ns.L
 -- ====================================================================
 -- Generates a unique key for the current location using Zone and Sub-zone names.
 local function GetZoneKey()
-    return GetZoneText() .. " - " .. GetMinimapZoneText()
+    local mainZone = GetZoneText() or ""
+    local miniZone = GetMinimapZoneText() or ""
+    
+    -- If a subzone exists (even if it has the same name as the main zone)
+    if miniZone ~= "" then
+        return mainZone .. " - " .. miniZone
+    end
+    
+    return mainZone
 end
 
 -- ====================================================================
@@ -171,7 +179,7 @@ local function UpdateEverything()
         local _, _, _, _, _, _, itemSubType = GetItemInfo(itemID)
         if itemSubType then
             local s = itemSubType:lower()
-            if (s:find("fishing poles")) then
+            if (s:find("fishing poles") or s:find("angel") or s:find("canne") or s:find("caña") or s:find("удочка") or s:find("钓鱼竿") or s:find("釣魚竿") or s:find("낚싯대") or s:find("vara de pesca")) then
                 isPole = true
             end
         end
@@ -220,7 +228,7 @@ StaticPopupDialogs["FF_CONFIRM_CLEAR_ALL"] = {
 }
 
 -- CONFIG FRAME SETUP
-local Config = CreateFrame("Frame", "FF_Config", UIParent)
+local Config = CreateFrame("Frame", "FF_Config", UIParent, "BackdropTemplate")
 Config:SetSize(280, 385) 
 Config:SetPoint("CENTER")
 Config:SetBackdrop({ bgFile="Interface\\DialogFrame\\UI-DialogBox-Background", edgeFile="Interface\\DialogFrame\\UI-DialogBox-Border", tile=true, tileSize=32, edgeSize=32, insets={left=8,right=8,top=8,bottom=8} })
@@ -237,7 +245,9 @@ Config.title:SetText(addonName)
 Config.version = Config:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
 Config.version:SetPoint("TOP", Config.title, "BOTTOM", 0, -2)
 Config.version:SetTextColor(1, 1, 1)
-Config.version:SetText("Version " .. (GetAddOnMetadata(addonName, "Version") or "0.0.1"))
+
+local addonVersion = (C_AddOns and C_AddOns.GetAddOnMetadata and C_AddOns.GetAddOnMetadata(addonName, "Version")) or (GetAddOnMetadata and GetAddOnMetadata(addonName, "Version")) or "0.0.1"
+Config.version:SetText("Version " .. addonVersion)
 
 -- Helper function to generate standardized checkboxes in the settings menu
 local function CreateCheckButton(key, label, y)
@@ -283,6 +293,7 @@ e:RegisterEvent("ZONE_CHANGED")
 e:RegisterEvent("ZONE_CHANGED_INDOORS")
 e:RegisterEvent("CHAT_MSG_LOOT")
 e:RegisterEvent("SKILL_LINES_CHANGED")
+e:RegisterEvent("UI_INFO_MESSAGE")
 
 e:SetScript("OnEvent", function(self, event, ...)
     if event == "CHAT_MSG_LOOT" then 
@@ -291,7 +302,7 @@ e:SetScript("OnEvent", function(self, event, ...)
     elseif event == "UNIT_INVENTORY_CHANGED" then
         -- Only trigger update if the inventory change happened to the player
         if ... == "player" then UpdateEverything() end
-    else 
+    else
         -- Handle area changes and entering world
         UpdateEverything() 
     end
