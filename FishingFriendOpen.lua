@@ -68,6 +68,7 @@ local OPEN_ITEMS = {
     [6647]      = "Bloated Catfish",
     [8366]      = "Bloated Trout",
     [27511]     = "Inscribed Scrollcase",
+    [35313]     = "Bloated Barbed Gill Trout", -- For the fishing quest [Shrimpin' Ain't Easy]
 }
 
 -----------------------------------------------------------------------

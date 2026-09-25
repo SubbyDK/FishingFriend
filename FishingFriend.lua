@@ -71,7 +71,18 @@ if (not FF_STATS) or (type(FF_STATS) ~= "table") then
     FF_STATS = {}
 end
 if (not FF_SETTINGS) or (type(FF_SETTINGS) ~= "table") then
-    FF_SETTINGS = { autoLure = true, playSounds = true, showChat = true, debug = false, showTracker = true, autoOpen = 1, perfectSound = 1, autoTrack = true, lastTrackingIndex = nil, wasTrackingActiveBefore = false }
+    FF_SETTINGS = {
+        autoLure = true,
+        playSounds = true,
+        showChat = true,
+        debug = false,
+        showTracker = true,
+        autoOpen = 1,
+        perfectSound = 1,
+        autoTrack = true,
+        lastTrackingIndex = nil,
+        wasTrackingActiveBefore = false
+    }
 end
 
 local SUCCESS_SOUND = "Interface\\AddOns\\FishingFriend\\Sounds\\GoodFishing.ogg"
@@ -86,11 +97,13 @@ local SKILL_BREAKPOINTS = {0, 25, 75, 150, 225, 300, 375, 400, 425, 450, 475, 49
 local LURES = {
     { name = "Shiny Bauble", bonus = 25, minSkill = 1, id = 6529 },
     { name = "Nightcrawlers", bonus = 50, minSkill = 50, id = 6530 },
+    -- { name = "Weather-Beaten Fishing Hat", bonus = 75, minSkill = 1, id = 33820 }, -- Added in TBC.
     { name = "Bright Baubles", bonus = 75, minSkill = 100, id = 6532 },
-    { name = "Aquadynamic Fish Lens", bonus = 50, minSkill = 100, id = 34861 },
-    { name = "Flesh Eating Worm", bonus = 75, minSkill = 100, id = 34861 },
+    { name = "Aquadynamic Fish Lens", bonus = 50, minSkill = 100, id = 6811 },
+    { name = "Flesh Eating Worm", bonus = 75, minSkill = 100, id = 7307 },
     { name = "Aquadynamic Fish Attractor", bonus = 100, minSkill = 100, id = 6533 },
-    { name = "Glow-worm", bonus = 100, minSkill = 100, id = 43334 }
+    { name = "Glow Worm", bonus = 100, minSkill = 100, id = 46006 }, -- Retail lure from Privat Server.
+    { name = "Sharpened Fish Hook", bonus = 100, minSkill = 100, id = 34861 }, --  Added in TBC.
 }
 
 -- List of "fake" junk items (Dalaran coins, etc.) that shouldn't trigger skill-up requirements.
@@ -173,13 +186,18 @@ local QUEST_FISHING_ITEMS = {
     [34469] = true, -- Strange Engine Part
 
     -- Weekly fishing contests
-    [19807] = true, -- Speckled Tastyfish (Master Angler)
+    -- Classic
+    [19803] = true, -- Brownell's Blue Striped Racer - Turn in for [Nat Pagle's Extreme Anglin' Boots] in Booty Bay in Stranglethorn Vale.
+    [19804] = true, -- Pale Ghoulfish - Turn in for [Worn Fishing Hat] in Booty Bay in Stranglethorn Vale.
+    [19805] = true, -- Keefer's Angelfish - Turn in for [Lucky Fishing Hat] in Booty Bay in Stranglethorn Vale.
+    [19806] = true, -- Dezian Queenfish - Turn in for [High Test Eternium Fishing Line] in Booty Bay in Stranglethorn Vale.
+    [19807] = true, -- Speckled Tastyfish - Turn in 40 x Speckled Tastyfish for [Arcanite Fishing Pole] in Booty Bay in Stranglethorn Vale., quest name is [Master Angler] and only first to do it will win.
+
+    -- WotLK
     [50289] = true, -- Blacktip Shark (Kalu'ak Fishing Derby)
-    [19805] = true, -- Keefer's Angelfish
-    [19806] = true, -- Dezian Queenfish
-    [19803] = true, -- Brownell's Blue Striped Racer
-    [19804] = true, -- Pale Ghoulfish
 }
+
+-- What he yell when it's over: Riggle Bassbait yells: We have a winner!  Ildkugler is the Master Angler! 
 
 -- Rare or special items that trigger sound alerts.
 local SPECIAL_FISHING_ITEMS = {
@@ -283,8 +301,19 @@ local function FlagZoneSkillHigher()
     local zone = GetCurrentZoneKey()
     local currentTotal = ns.GetCurrentTotalSkill()
     local nextSkill = GetNextBreakpoint(currentTotal)
-    REQUIRED_FISHING_SKILL[zone] = nextSkill
-    DebugLog("Fish escaped or junk caught! Set required skill for " .. zone .. " to " .. nextSkill, "ff8000")
+    
+    local oldSkill = REQUIRED_FISHING_SKILL[zone] or 0
+
+    -- Only update and print if the value actually changes (or is higher)
+    if oldSkill ~= nextSkill then
+        REQUIRED_FISHING_SKILL[zone] = nextSkill
+        print("|cff00ff00" .. addonName .. "|r: " .. zone .. ". Updated to " .. nextSkill .. ".")
+
+        -- Update the tracker UI
+        if ns.RefreshTracker then
+            ns.RefreshTracker()
+        end
+    end
 end
 
 -- Safe wrapper for C_Minimap tracking info to prevent nil value errors
@@ -331,6 +360,7 @@ f:RegisterEvent("UNIT_INVENTORY_CHANGED")
 f:RegisterEvent("PLAYER_ENTERING_WORLD")
 f:RegisterEvent("PLAYER_REGEN_DISABLED")
 f:RegisterEvent("UI_INFO_MESSAGE")
+f:RegisterEvent("UI_ERROR_MESSAGE")
 f:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 
 f:SetScript("OnEvent", function(self, event, ...)
@@ -341,6 +371,16 @@ f:SetScript("OnEvent", function(self, event, ...)
             FlagZoneSkillHigher()
             wasFishing, clickedBobber = false, false
             DebugLog("UI_INFO_MESSAGE triggered: " .. tostring(msg), "ffaa00")
+        end
+
+    -- Handle error messages (e.g., skill not high enough via SPELL_FAILED_LOW_CASTLEVEL).
+    elseif event == "UI_ERROR_MESSAGE" then
+        local errorType, msg = ...
+        local messageText = msg or errorType
+        if messageText == SPELL_FAILED_LOW_CASTLEVEL then
+            FlagZoneSkillHigher()
+            wasFishing, clickedBobber = false, false
+            DebugLog("UI_ERROR_MESSAGE triggered: SPELL_FAILED_LOW_CASTLEVEL", "ff5555")
         end
 
     -- Clear override bindings when entering combat to prevent action errors.

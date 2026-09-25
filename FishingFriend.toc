@@ -1,12 +1,12 @@
-## Interface: 20504
-## Version: 0.0.6
+## Interface: 20506
+## Version: 0.0.7
 ## Title: FishingFriend |cd0ff7d0aBy Subby|r
 ## Notes: Because staring at a bobber for 17 hours is hard enough. (/ff)
 ## Author: Subby
 ##
 ## Dependencies: 
 ##
-## SavedVariables: FF_STATS, REQUIRED_FISHING_SKILL
+## SavedVariables: REQUIRED_FISHING_SKILL, FF_STATS
 ## SavedVariablesPerCharacter: FF_SETTINGS
 ##
 ## X-Category: Fishing

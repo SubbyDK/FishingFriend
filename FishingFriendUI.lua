@@ -23,8 +23,12 @@ end
 -- Toggles game sounds to highlight the fishing bobber splash.
 -- Mutes music/ambience and boosts SFX/Master volume when a pole is equipped.
 local function AdjustSounds(enable)
-    if not FF_SETTINGS or not FF_SETTINGS.perfectSound then return end
-    if not FF_SETTINGS.originalSounds then FF_SETTINGS.originalSounds = {} end
+    if not FF_SETTINGS or not FF_SETTINGS.perfectSound then
+        return
+    end
+    if not FF_SETTINGS.originalSounds then
+        FF_SETTINGS.originalSounds = {}
+    end
     
     if enable then
         -- Store current user settings before modifying them
@@ -32,15 +36,16 @@ local function AdjustSounds(enable)
             FF_SETTINGS.originalSounds.music = GetCVar("Sound_EnableMusic")
             FF_SETTINGS.originalSounds.musicVol = GetCVar("Sound_MusicVolume")
             FF_SETTINGS.originalSounds.ambience = GetCVar("Sound_EnableAmbience")
-            FF_SETTINGS.originalSounds.ambienceVol = GetCVar("Sound_AmbienceVolume")
             FF_SETTINGS.originalSounds.sfx = GetCVar("Sound_SFXVolume")
             FF_SETTINGS.originalSounds.master = GetCVar("Sound_MasterVolume")
+            FF_SETTINGS.originalSounds.background = GetCVar("Sound_EnableSoundWhenGameIsInBG")
             
             -- Set immersive fishing levels
             SetCVar("Sound_EnableMusic", 0)
             SetCVar("Sound_EnableAmbience", 0)
             SetCVar("Sound_SFXVolume", 1.0)
             SetCVar("Sound_MasterVolume", 1.0)
+            SetCVar("Sound_EnableSoundWhenGameIsInBG", 1)
             FF_SETTINGS.isSoundAdjusted = true
         end
     else
@@ -51,9 +56,9 @@ local function AdjustSounds(enable)
                 SetCVar("Sound_EnableMusic", o.music)
                 SetCVar("Sound_MusicVolume", o.musicVol)
                 SetCVar("Sound_EnableAmbience", o.ambience)
-                SetCVar("Sound_AmbienceVolume", o.ambienceVol)
                 SetCVar("Sound_SFXVolume", o.sfx)
                 SetCVar("Sound_MasterVolume", o.master)
+                SetCVar("Sound_EnableSoundWhenGameIsInBG", o.background)
             end
             FF_SETTINGS.isSoundAdjusted = false
             FF_SETTINGS.originalSounds = {}
@@ -105,7 +110,7 @@ Tracker:SetScript("OnMouseUp", function(self, button) if button == "LeftButton" 
 -- TRACKER UPDATE LOGIC
 -- ====================================================================
 -- Refreshes all text and item statistics shown on the tracker.
-local function RefreshTracker()
+function ns.RefreshTracker()
     if not Tracker:IsVisible() then return end
     
     local zone = GetZoneKey()
@@ -188,7 +193,7 @@ local function UpdateEverything()
     -- Toggle Tracker visibility
     if (isPole) and (FF_SETTINGS.showTracker) and (not InCombatLockdown()) then
         Tracker:Show();
-        RefreshTracker()
+        ns.RefreshTracker()
     else
         Tracker:Hide()
     end
@@ -213,7 +218,7 @@ end
 StaticPopupDialogs["FF_CONFIRM_CLEAR_ZONE"] = { 
     text = "Clear data for this zone?", 
     button1 = "Yes", button2 = "No", 
-    OnAccept = function() FF_STATS[GetZoneKey()] = nil; RefreshTracker() end, 
+    OnAccept = function() FF_STATS[GetZoneKey()] = nil; ns.RefreshTracker() end, 
     timeout = 0, whileDead = true, hideOnEscape = true 
 }
 
@@ -223,7 +228,7 @@ StaticPopupDialogs["FF_CONFIRM_CLEAR_ALL"] = {
     button1 = "Yes", button2 = "No", 
     OnAccept = function() 
         FF_STATS = {}; FF_SETTINGS.originalSounds = {}; FF_SETTINGS.isSoundAdjusted = false; FF_SETTINGS.lastTrackingIndex = nil
-        RefreshTracker(); if ns.UpdateLootButton then ns.UpdateLootButton() end
+        ns.RefreshTracker(); if ns.UpdateLootButton then ns.UpdateLootButton() end
     end, timeout = 0, whileDead = true, hideOnEscape = true 
 }
 
@@ -298,7 +303,7 @@ e:RegisterEvent("UI_INFO_MESSAGE")
 e:SetScript("OnEvent", function(self, event, ...)
     if event == "CHAT_MSG_LOOT" then 
         -- Update stats live if something is looted while tracker is open
-        if Tracker:IsVisible() then RefreshTracker() end
+        if Tracker:IsVisible() then ns.RefreshTracker() end
     elseif event == "UNIT_INVENTORY_CHANGED" then
         -- Only trigger update if the inventory change happened to the player
         if ... == "player" then UpdateEverything() end
