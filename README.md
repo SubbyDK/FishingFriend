@@ -1,8 +1,8 @@
 # FishingFriend
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Interface-20504-blue.svg" alt="Interface">
-  <img src="https://img.shields.io/badge/Version-0.0.6-green.svg" alt="Version">
+  <img src="https://img.shields.io/badge/Interface-20506-blue.svg" alt="Interface">
+  <img src="https://img.shields.io/badge/Version-0.0.7-green.svg" alt="Version">
   <img src="https://img.shields.io/badge/Author-Subby-orange.svg" alt="Author">
   <img src="https://img.shields.io/github/downloads/SubbyDK/FishingFriend/total" alt="Downloads">
 </p>
