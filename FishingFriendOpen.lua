@@ -67,6 +67,7 @@ local OPEN_ITEMS = {
     -- Other
     [6647]      = "Bloated Catfish",
     [8366]      = "Bloated Trout",
+    [25424]     = "Gem-Stuffed Envelope", -- From the quest [Membership Benefits]
     [27511]     = "Inscribed Scrollcase",
     [35313]     = "Bloated Barbed Gill Trout", -- For the fishing quest [Shrimpin' Ain't Easy]
 }
